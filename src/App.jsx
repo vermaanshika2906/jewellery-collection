@@ -176,7 +176,7 @@ async function ownerLogin() {
     return;
   }
 
-  if (gstNumber.trim().toUpperCase() !== "XYZ") {
+  if (gstNumber.trim().toUpperCase() !== "06bgjpk4564k1z1") {
     alert("Invalid GST Number");
     return;
   }
