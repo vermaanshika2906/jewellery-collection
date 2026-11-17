@@ -139,6 +139,7 @@ function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [gstNumber, setGstNumber] = useState("");
 
   const [isCustomer, setIsCustomer] = useState(false);
   const [cloudFolders, setCloudFolders] = useState([]);
@@ -169,23 +170,34 @@ function App() {
   );
 
   // OWNER LOGIN
-  async function ownerLogin() {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) {
-      alert("Login failed: " + error.message);
-      return;
-    }
-
-    setUser(data.user);
-    setIsCustomer(false);
-    setShowLogin(false);
-    setPassword("");
-    alert("Owner login successful!");
+async function ownerLogin() {
+  if (!gstNumber.trim()) {
+    alert("Please enter GST Number");
+    return;
   }
+
+  if (gstNumber.trim().toUpperCase() !== "XYZ") {
+    alert("Invalid GST Number");
+    return;
+  }
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    alert("Login failed: " + error.message);
+    return;
+  }
+
+  setUser(data.user);
+  setIsCustomer(false);
+  setShowLogin(false);
+  setPassword("");
+  setGstNumber("");
+  alert("Owner login successful!");
+}
 
   // CHECK LOGIN SESSION
   useEffect(() => {
@@ -1216,6 +1228,15 @@ async function toggleFavourite(photo) {
                 value={password}
                 onChange={event => setPassword(event.target.value)}
               />
+
+              <input
+  type="text"
+  placeholder="Enter GST Number"
+  value={gstNumber}
+  onChange={(e) => setGstNumber(e.target.value)}
+/>
+
+              
 
               <button onClick={ownerLogin}>Login</button>
               <button onClick={() => setShowLogin(false)}>Cancel</button>
